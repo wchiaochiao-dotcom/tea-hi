@@ -1,0 +1,1328 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>茶海 CHA Hi｜辦公室午茶團購點餐系統</title>
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Google Fonts: Noto Sans TC & Inter -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Noto+Sans+TC:wght@400;500;600;700&display=swap" rel="stylesheet">
+  
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            brand: {
+              bg: '#FAF8F5',
+              surface: '#FFFFFF',
+              green: '#4A6B3E',
+              greenDark: '#38522E',
+              greenLight: '#EEF3EC',
+              plum: '#B83A2D',
+              plumDark: '#962D22',
+              plumLight: '#FDF1F0',
+              gold: '#C8B598',
+              goldLight: '#F3EFEA',
+              text: '#2C2A29',
+              muted: '#6E6A66'
+            }
+          },
+          fontFamily: {
+            sans: ['"Noto Sans TC"', '"Inter"', 'sans-serif'],
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    body {
+      background-color: #FAF8F5;
+      color: #2C2A29;
+      -webkit-tap-highlight-color: transparent;
+    }
+    /* Custom subtle scrollbar */
+    ::-webkit-scrollbar {
+      width: 6px;
+      height: 6px;
+    }
+    ::-webkit-scrollbar-track {
+      background: #FAF8F5;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: #C8B598;
+      border-radius: 9999px;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: #4A6B3E;
+    }
+    .no-scrollbar::-webkit-scrollbar {
+      display: none;
+    }
+    .no-scrollbar {
+      -ms-overflow-style: none;
+      scrollbar-width: none;
+    }
+  </style>
+</head>
+<body class="min-h-screen flex flex-col font-sans selection:bg-brand-green selection:text-white">
+
+  <!-- Top Brand Header -->
+  <header class="bg-gradient-to-r from-[#4A6B3E] via-[#537446] to-[#B83A2D] text-white shadow-md sticky top-0 z-30">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3.5 flex flex-wrap items-center justify-between gap-3">
+      <div class="flex items-center gap-3">
+        <!-- Brand Emblem SVG -->
+        <div class="w-11 h-11 rounded-2xl bg-white/15 backdrop-blur-sm border border-white/30 flex items-center justify-center shadow-inner shrink-0">
+          <svg class="w-7 h-7 text-white" viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M18 4C11 4 6 10 6 18C6 25 11.5 31 18 32C24.5 31 30 25 30 18C30 10 25 4 18 4Z" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+            <path d="M18 8V28M18 14L23 10M18 19L12 15M18 23L24 19" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+          </svg>
+        </div>
+        <div>
+          <div class="flex items-center gap-2">
+            <h1 class="text-xl sm:text-2xl font-bold tracking-wide">茶海 CHA Hi</h1>
+            <span class="text-xs font-medium px-2.5 py-0.5 rounded-full bg-white/20 border border-white/25">辦公室午茶團購</span>
+          </div>
+          <p class="text-xs sm:text-sm text-white/90 tracking-wider mt-0.5">當果香遇見梅好 <span class="hidden sm:inline opacity-80">· When Fruit Meets Plum.</span></p>
+        </div>
+      </div>
+
+      <!-- Legend & Quick Actions -->
+      <div class="flex items-center gap-2 sm:gap-4 text-xs sm:text-sm">
+        <div class="flex items-center gap-3 bg-black/20 backdrop-blur-sm px-3 py-1.5 rounded-xl border border-white/15">
+          <span class="flex items-center gap-1.5">
+            <span class="w-2.5 h-2.5 rounded-full bg-[#3898EC] ring-2 ring-white/80 inline-block"></span>
+            <span>僅供冷飲</span>
+          </span>
+          <span class="w-px h-3.5 bg-white/30"></span>
+          <span class="flex items-center gap-1.5">
+            <span class="w-2.5 h-2.5 rounded-full bg-[#E53E3E] ring-2 ring-white/80 inline-block"></span>
+            <span>僅供熱飲</span>
+          </span>
+          <span class="hidden md:inline w-px h-3.5 bg-white/30"></span>
+          <span class="hidden md:inline text-white/85">無標示：冷熱皆可</span>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Workspace -->
+  <main class="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-6 pb-28 lg:pb-10">
+    <div class="flex flex-col lg:flex-row gap-6 items-start">
+      
+      <!-- Left Column: Menu Filtering & Drink Cards -->
+      <section class="w-full lg:w-[63%] xl:w-[66%] space-y-5">
+        
+        <!-- Search & Category Filter Bar -->
+        <div class="bg-white rounded-2xl p-4 shadow-sm border border-brand-gold/50 space-y-3.5">
+          <div class="flex flex-col sm:flex-row gap-3 justify-between items-stretch sm:items-center">
+            <!-- Search Input -->
+            <div class="relative flex-1">
+              <svg class="w-4 h-4 text-brand-muted absolute left-3.5 top-1/2 -translate-y-1/2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
+              </svg>
+              <input 
+                type="text" 
+                id="searchInput" 
+                placeholder="搜尋飲品名稱（例如：梅梅、仙草、拿鐵、薑母...）" 
+                class="w-full pl-10 pr-9 py-2.5 bg-brand-bg border border-brand-gold/60 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-brand-green focus:border-transparent transition"
+              />
+              <button id="clearSearchBtn" class="hidden absolute right-3 top-1/2 -translate-y-1/2 text-brand-muted hover:text-brand-text p-1">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+              </button>
+            </div>
+
+            <!-- Temperature Quick Filter -->
+            <div class="flex items-center gap-1.5 bg-brand-bg p-1 rounded-xl border border-brand-gold/50 shrink-0">
+              <button data-temp-filter="all" class="temp-filter-btn active px-3 py-1.5 rounded-lg text-xs font-medium bg-brand-green text-white shadow-sm transition">全部</button>
+              <button data-temp-filter="cold" class="temp-filter-btn px-3 py-1.5 rounded-lg text-xs font-medium text-brand-muted hover:text-brand-text transition flex items-center gap-1">
+                <span class="w-2 h-2 rounded-full bg-[#2B6CB0]"></span>冷飲可
+              </button>
+              <button data-temp-filter="hot" class="temp-filter-btn px-3 py-1.5 rounded-lg text-xs font-medium text-brand-muted hover:text-brand-text transition flex items-center gap-1">
+                <span class="w-2 h-2 rounded-full bg-[#C53030]"></span>熱飲可
+              </button>
+            </div>
+          </div>
+
+          <!-- Category Tabs -->
+          <div id="categoryTabs" class="flex items-center gap-2 overflow-x-auto no-scrollbar pt-1">
+            <!-- Injected via JS -->
+          </div>
+        </div>
+
+        <!-- Menu Sections Container -->
+        <div id="menuContainer" class="space-y-8">
+          <!-- Injected via JS -->
+        </div>
+
+        <!-- Empty Search State -->
+        <div id="emptySearchState" class="hidden bg-white rounded-2xl p-10 text-center border border-brand-gold/50">
+          <div class="w-14 h-14 mx-auto rounded-full bg-brand-goldLight flex items-center justify-center text-brand-muted mb-3">
+            <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+          </div>
+          <p class="font-semibold text-base text-brand-text">找不到符合條件的飲品</p>
+          <p class="text-sm text-brand-muted mt-1">請嘗試其他關鍵字或切換溫度篩選條件</p>
+          <button id="resetFiltersBtn" class="mt-4 px-4 py-2 bg-brand-green text-white text-sm font-medium rounded-xl hover:bg-brand-greenDark transition">重設篩選條件</button>
+        </div>
+
+        <!-- Toppings & Options Reference Card -->
+        <div class="bg-white rounded-2xl p-5 border border-brand-gold/60 shadow-sm">
+          <h3 class="text-sm font-bold text-brand-green flex items-center gap-2 mb-3">
+            <span class="w-1.5 h-4 bg-brand-plum rounded-full"></span>
+            加點好料與客製化說明
+          </h3>
+          <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 text-xs">
+            <div class="bg-brand-bg rounded-xl p-3 border border-brand-gold/40">
+              <div class="font-semibold text-brand-text mb-1.5">加點好料</div>
+              <ul class="space-y-1 text-brand-muted">
+                <li class="flex justify-between"><span>波霸 / 玉荷椰果</span><span class="font-semibold text-brand-plum">+$5</span></li>
+                <li class="flex justify-between"><span>茉綠凍</span><span class="font-semibold text-brand-plum">+$10</span></li>
+                <li class="flex justify-between"><span>仙草300條 / 統一布丁</span><span class="font-semibold text-brand-plum">+$15</span></li>
+              </ul>
+            </div>
+            <div class="bg-brand-bg rounded-xl p-3 border border-brand-gold/40">
+              <div class="font-semibold text-brand-text mb-1.5">冰塊選擇</div>
+              <p class="text-brand-muted leading-relaxed">正常冰 ｜ 五分冰 ｜ 三分冰 ｜ 一分冰 ｜ 去冰</p>
+              <p class="text-[11px] text-brand-plum mt-1.5 font-medium">* 紅豆紫米拿鐵「去冰」需 +$10</p>
+            </div>
+            <div class="bg-brand-bg rounded-xl p-3 border border-brand-gold/40">
+              <div class="font-semibold text-brand-text mb-1.5">甜度選擇</div>
+              <p class="text-brand-muted leading-relaxed">七分糖 ｜ 五分糖 ｜ 三分糖 ｜ 一分糖 ｜ 無糖</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Right Column: Sticky Group Order Cart (Desktop) / Drawer (Mobile) -->
+      <aside id="cartSidebar" class="fixed inset-0 z-40 lg:static lg:z-auto lg:w-[37%] xl:w-[34%] lg:sticky lg:top-20 hidden lg:block">
+        <!-- Mobile Backdrop -->
+        <div id="cartBackdrop" class="fixed inset-0 bg-black/50 backdrop-blur-xs lg:hidden"></div>
+        
+        <!-- Cart Panel -->
+        <div class="fixed bottom-0 inset-x-0 max-h-[88vh] lg:max-h-[calc(100vh-6.5rem)] lg:static bg-white rounded-t-3xl lg:rounded-2xl shadow-2xl lg:shadow-md border border-brand-gold/70 flex flex-col overflow-hidden transition-transform">
+          
+          <!-- Cart Header -->
+          <div class="p-4 sm:p-5 bg-brand-goldLight/60 border-b border-brand-gold/50 shrink-0">
+            <div class="flex items-center justify-between">
+              <div class="flex items-center gap-2">
+                <span class="w-8 h-8 rounded-xl bg-brand-green text-white flex items-center justify-center">
+                  <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"/></svg>
+                </span>
+                <div>
+                  <h2 class="font-bold text-base sm:text-lg text-brand-text leading-tight">團購訂單明細</h2>
+                  <p class="text-xs text-brand-muted">即時統計同事點餐與總金額</p>
+                </div>
+              </div>
+              <div class="flex items-center gap-1.5">
+                <button id="clearCartBtn" class="text-xs px-2.5 py-1.5 rounded-lg text-brand-plum hover:bg-brand-plumLight font-medium transition" title="清空所有訂單">
+                  清空訂單
+                </button>
+                <button id="closeMobileCartBtn" class="lg:hidden p-1.5 rounded-lg text-brand-muted hover:bg-black/5">
+                  <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+                </button>
+              </div>
+            </div>
+
+            <!-- View Mode Toggle -->
+            <div class="mt-3 grid grid-cols-2 gap-1 bg-white p-1 rounded-xl border border-brand-gold/60">
+              <button id="viewByPersonBtn" class="py-1.5 px-2 rounded-lg text-xs font-semibold bg-brand-green text-white shadow-xs transition">
+                依訂購人檢視
+              </button>
+              <button id="viewByItemBtn" class="py-1.5 px-2 rounded-lg text-xs font-semibold text-brand-muted hover:text-brand-text transition">
+                依品項合併統計
+              </button>
+            </div>
+          </div>
+
+          <!-- Cart Items Scrollable List -->
+          <div id="cartItemsContainer" class="flex-1 overflow-y-auto p-4 space-y-3 bg-brand-bg/40 min-h-[220px]">
+            <!-- Injected via JS -->
+          </div>
+
+          <!-- Cart Summary Footer -->
+          <div class="p-4 sm:p-5 bg-white border-t border-brand-gold/60 shrink-0 space-y-3">
+            <div class="flex items-center justify-between text-sm">
+              <span class="text-brand-muted font-medium">總計杯數</span>
+              <span class="font-bold text-brand-text text-base"><span id="totalCupsCount" class="text-brand-green text-lg">0</span> 杯</span>
+            </div>
+            <div class="flex items-baseline justify-between">
+              <span class="text-brand-text font-bold text-base">團購總金額</span>
+              <span class="text-2xl font-bold text-brand-plum">$<span id="totalAmountCount">0</span></span>
+            </div>
+
+            <div class="grid grid-cols-1 gap-2 pt-1">
+              <button id="copySummaryBtn" class="w-full py-3 px-4 rounded-xl bg-brand-green hover:bg-brand-greenDark active:scale-[0.99] text-white font-bold text-sm shadow-sm flex items-center justify-center gap-2 transition">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 5H6a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2v-1M8 5a2 2 0 002 2h2a2 2 0 002-2M8 5a2 2 0 012-2h2a2 2 0 012 2m0 0h2a2 2 0 012 2v3m2 4H10m0 0l3-3m-3 3l3 3"/></svg>
+                <span>一鍵複製團購明細 (LINE / Teams)</span>
+              </button>
+            </div>
+          </div>
+        </div>
+      </aside>
+    </div>
+  </main>
+
+  <!-- Mobile Bottom Floating Cart Bar -->
+  <div id="mobileCartBar" class="lg:hidden fixed bottom-0 inset-x-0 z-30 bg-white/95 backdrop-blur-md border-t border-brand-gold/70 px-4 py-3 shadow-[0_-4px_20px_rgba(0,0,0,0.08)]">
+    <div class="max-w-lg mx-auto flex items-center justify-between gap-3">
+      <button id="openMobileCartBtn" class="flex-1 flex items-center justify-between bg-brand-green hover:bg-brand-greenDark text-white px-4 py-3 rounded-xl font-bold shadow-sm transition">
+        <div class="flex items-center gap-2.5">
+          <span class="bg-white text-brand-green text-xs font-extrabold px-2 py-0.5 rounded-full" id="mobileBadgeCount">0</span>
+          <span class="text-sm">檢視團購明細</span>
+        </div>
+        <span class="text-base font-extrabold">$<span id="mobileTotalAmount">0</span></span>
+      </button>
+    </div>
+  </div>
+
+  <!-- Drink Customization Modal -->
+  <div id="customModal" class="fixed inset-0 z-50 hidden items-center justify-center p-3 sm:p-4">
+    <div id="modalBackdrop" class="fixed inset-0 bg-black/55 backdrop-blur-xs transition-opacity"></div>
+    
+    <div class="relative bg-white w-full max-w-lg rounded-3xl shadow-2xl border border-brand-gold/70 overflow-hidden flex flex-col max-h-[92vh] z-10 animate-[fadeIn_0.15s_ease-out]">
+      <!-- Modal Header -->
+      <div class="px-5 py-4 bg-brand-bg border-b border-brand-gold/50 flex items-start justify-between gap-3 shrink-0">
+        <div>
+          <div class="flex items-center gap-2 flex-wrap">
+            <span id="modalCategoryBadge" class="text-[11px] font-semibold px-2 py-0.5 rounded-md bg-brand-greenLight text-brand-green">茶海經典</span>
+            <span id="modalTempBadge"></span>
+          </div>
+          <h3 id="modalDrinkName" class="text-xl font-bold text-brand-text mt-1">飲品名稱</h3>
+          <p id="modalDrinkNote" class="text-xs text-brand-plum font-medium mt-0.5 hidden"></p>
+        </div>
+        <button id="closeModalBtn" class="p-2 rounded-full bg-white border border-brand-gold/50 text-brand-muted hover:text-brand-text transition">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+        </button>
+      </div>
+
+      <!-- Modal Scrollable Form -->
+      <div class="p-5 overflow-y-auto space-y-5 flex-1">
+        
+        <!-- 1. Orderer Name / Dept -->
+        <div>
+          <label class="block text-sm font-bold text-brand-text mb-1.5">
+            訂購人姓名 / 部門 <span class="text-brand-plum">*</span>
+          </label>
+          <div class="flex gap-2">
+            <input 
+              type="text" 
+              id="ordererNameInput" 
+              placeholder="例如：行銷部 小美、Alex..." 
+              class="flex-1 px-3.5 py-2.5 bg-brand-bg border border-brand-gold/70 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-brand-green transition"
+            />
+          </div>
+          <!-- Quick Name Chips from existing orders -->
+          <div id="recentNamesContainer" class="flex flex-wrap gap-1.5 mt-2"></div>
+        </div>
+
+        <!-- 2. Tea Base Selection (Conditional) -->
+        <div id="teaBaseSection" class="hidden">
+          <label class="block text-sm font-bold text-brand-text mb-2">
+            茶底選擇 <span class="text-brand-plum">* (必選)</span>
+          </label>
+          <div class="grid grid-cols-3 gap-2" id="teaBaseOptions">
+            <!-- Injected via JS -->
+          </div>
+        </div>
+
+        <!-- 3. Temperature / Ice Selection -->
+        <div>
+          <div class="flex items-center justify-between mb-2">
+            <label class="text-sm font-bold text-brand-text">溫度 / 冰塊 <span class="text-brand-plum">*</span></label>
+            <span id="tempRestrictionHint" class="text-xs text-brand-muted"></span>
+          </div>
+          <div class="grid grid-cols-3 gap-2" id="iceOptions">
+            <!-- Injected via JS -->
+          </div>
+        </div>
+
+        <!-- 4. Sugar Selection -->
+        <div>
+          <label class="block text-sm font-bold text-brand-text mb-2">甜度選擇 <span class="text-brand-plum">*</span></label>
+          <div class="grid grid-cols-3 sm:grid-cols-5 gap-2" id="sugarOptions">
+            <!-- Injected via JS -->
+          </div>
+        </div>
+
+        <!-- 5. Toppings (Multi-select) -->
+        <div>
+          <label class="block text-sm font-bold text-brand-text mb-2">加點好料 <span class="text-xs font-normal text-brand-muted">(可複選)</span></label>
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-2" id="toppingOptions">
+            <!-- Injected via JS -->
+          </div>
+        </div>
+
+        <!-- 6. Short Note -->
+        <div>
+          <label class="block text-sm font-bold text-brand-text mb-1.5">客製備註 <span class="text-xs font-normal text-brand-muted">(選填)</span></label>
+          <input 
+            type="text" 
+            id="itemNoteInput" 
+            placeholder="例如：不要吸管、分開裝..." 
+            class="w-full px-3.5 py-2 bg-brand-bg border border-brand-gold/60 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-brand-green transition"
+          />
+        </div>
+      </div>
+
+      <!-- Modal Footer: Quantity & Submit -->
+      <div class="px-5 py-4 bg-brand-bg border-t border-brand-gold/60 flex items-center justify-between gap-3 shrink-0">
+        <!-- Quantity Stepper -->
+        <div class="flex items-center bg-white border border-brand-gold/70 rounded-xl p-1">
+          <button type="button" id="qtyMinusBtn" class="w-9 h-9 rounded-lg flex items-center justify-center text-brand-text hover:bg-brand-bg font-bold text-lg transition">-</button>
+          <span id="qtyDisplay" class="w-9 text-center font-bold text-base">1</span>
+          <button type="button" id="qtyPlusBtn" class="w-9 h-9 rounded-lg flex items-center justify-center text-brand-text hover:bg-brand-bg font-bold text-lg transition">+</button>
+        </div>
+
+        <!-- Add Button -->
+        <button type="button" id="confirmAddBtn" class="flex-1 py-3 px-5 rounded-xl bg-brand-plum hover:bg-brand-plumDark active:scale-[0.99] text-white font-bold text-sm sm:text-base shadow-md transition flex items-center justify-center gap-2">
+          <span>加入團購單</span>
+          <span>-</span>
+          <span id="modalTotalPrice">$70</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Confirmation Dialog Modal (Replaces native confirm()) -->
+  <div id="confirmDialog" class="fixed inset-0 z-50 hidden items-center justify-center p-4">
+    <div class="fixed inset-0 bg-black/50 backdrop-blur-xs"></div>
+    <div class="relative bg-white w-full max-w-sm rounded-2xl p-6 shadow-xl border border-brand-gold/70 z-10 text-center">
+      <div class="w-12 h-12 rounded-full bg-brand-plumLight text-brand-plum mx-auto flex items-center justify-center mb-3">
+        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg>
+      </div>
+      <h4 class="text-lg font-bold text-brand-text">確定要清空團購訂單嗎？</h4>
+      <p class="text-sm text-brand-muted mt-1">清空後將移除目前所有的點餐紀錄，此動作無法復原。</p>
+      <div class="grid grid-cols-2 gap-2.5 mt-5">
+        <button id="cancelClearBtn" class="py-2.5 px-4 rounded-xl border border-brand-gold text-brand-text font-semibold text-sm hover:bg-brand-bg transition">取消</button>
+        <button id="executeClearBtn" class="py-2.5 px-4 rounded-xl bg-brand-plum text-white font-semibold text-sm hover:bg-brand-plumDark transition">確定清空</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast Notification -->
+  <div id="toast" class="fixed top-20 left-1/2 -translate-x-1/2 z-50 pointer-events-none opacity-0 transition-all duration-300 transform -translate-y-2">
+    <div class="bg-[#2C2A29] text-white px-4 py-2.5 rounded-full shadow-lg text-sm font-medium flex items-center gap-2 border border-white/10">
+      <svg class="w-4 h-4 text-[#68D391]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"/></svg>
+      <span id="toastMessage">已複製團購明細！</span>
+    </div>
+  </div>
+
+  <script>
+    // ==========================================
+    // 1. MENU DATA (Strictly Transcribed from Image)
+    // ==========================================
+    const MENU_CATEGORIES = [
+      { id: 'all', name: '全部飲品' },
+      { id: 'classics', name: '茶海經典' },
+      { id: 'pure', name: '茶韻回甘' },
+      { id: 'milktea', name: '厚奶時光' },
+      { id: 'latte', name: '濃醇極鮮' },
+      { id: 'fruit', name: '鮮果茶語' }
+    ];
+
+    // tempType: 'cold' (🔵 僅供冷飲), 'hot' (🔴 僅供熱飲), 'both' (冷熱皆可)
+    const MENU_ITEMS = [
+      // 1. 茶海經典 (CHA Hi Classics)
+      { id: 'c1', category: 'classics', name: '茶海仙草饌拿鐵', price: 70, tempType: 'cold', tag: '招牌必點' },
+      { id: 'c2', category: 'classics', name: '經典仙草饌', price: 55, tempType: 'cold' },
+      { id: 'c3', category: 'classics', name: '番茄梅梅', price: 70, tempType: 'cold', tag: '主打推薦' },
+      { id: 'c4', category: 'classics', name: '芭樂梅梅', price: 70, tempType: 'cold', tag: '主打推薦' },
+      { id: 'c5', category: 'classics', name: '紅豆紫米拿鐵', price: 70, tempType: 'both', note: '去冰+10', noIceExtra: 10 },
+      { id: 'c6', category: 'classics', name: '鮮果柚柚', price: 65, tempType: 'cold' },
+      { id: 'c7', category: 'classics', name: '水蜜桃輕烏', price: 70, tempType: 'cold' },
+
+      // 2. 茶韻回甘 (Pure Brewed Teas)
+      { id: 'p1', category: 'pure', name: '茶海·青', price: 40, tempType: 'both' },
+      { id: 'p2', category: 'pure', name: '錫蘭·紅', price: 35, tempType: 'both' },
+      { id: 'p3', category: 'pure', name: '三薰·綠', price: 35, tempType: 'both' },
+      { id: 'p4', category: 'pure', name: '輕焙·烏', price: 40, tempType: 'both' },
+      { id: 'p5', category: 'pure', name: '甘焙·大麥', price: 35, tempType: 'both' },
+      { id: 'p6', category: 'pure', name: '仙草·甘茶', price: 40, tempType: 'both' },
+      { id: 'p7', category: 'pure', name: '養樂多多綠', price: 55, tempType: 'cold' },
+
+      // 3. 厚奶時光 (Rich Milk Teas)
+      { id: 'm1', category: 'milktea', name: '奶茶', price: 55, tempType: 'both', requireTeaBase: true, subtitle: '可選茶底：錫蘭 / 三薰 / 輕烏' },
+      { id: 'm2', category: 'milktea', name: '珍珠奶茶', price: 55, tempType: 'both' },
+      { id: 'm3', category: 'milktea', name: '椰果奶茶', price: 55, tempType: 'both' },
+      { id: 'm4', category: 'milktea', name: '茉綠凍奶茶', price: 55, tempType: 'cold' },
+      { id: 'm5', category: 'milktea', name: '仙草饌奶茶', price: 65, tempType: 'cold' },
+      { id: 'm6', category: 'milktea', name: '布丁奶茶', price: 65, tempType: 'both' },
+
+      // 4. 濃醇極鮮 (Fresh Milk Lattes)
+      { id: 'l1', category: 'latte', name: '鮮奶茶', price: 65, tempType: 'both', requireTeaBase: true, subtitle: '可選茶底：錫蘭 / 三薰 / 輕烏' },
+      { id: 'l2', category: 'latte', name: '珍珠拿鐵', price: 65, tempType: 'both' },
+      { id: 'l3', category: 'latte', name: '茉綠凍拿鐵', price: 65, tempType: 'cold' },
+      { id: 'l4', category: 'latte', name: '布丁拿鐵', price: 75, tempType: 'both' },
+      { id: 'l5', category: 'latte', name: '薑汁拿鐵', price: 60, tempType: 'hot' },
+
+      // 5. 鮮果茶語 (Fresh Fruit Teas)
+      { id: 'f1', category: 'fruit', name: '甘梅青', price: 50, tempType: 'both' },
+      { id: 'f2', category: 'fruit', name: '檸檬冰茶', price: 55, tempType: 'both' },
+      { id: 'f3', category: 'fruit', name: '百香綠綠', price: 60, tempType: 'both' },
+      { id: 'f4', category: 'fruit', name: '茉綠凍檸青', price: 60, tempType: 'cold' },
+      { id: 'f5', category: 'fruit', name: '芭樂檸檬綠', price: 65, tempType: 'cold' },
+      { id: 'f6', category: 'fruit', name: '百香綠', price: 65, tempType: 'cold' },
+      { id: 'f7', category: 'fruit', name: '黑糖薑母茶', price: 55, tempType: 'hot' },
+      { id: 'f8', category: 'fruit', name: '桂圓紅棗茶', price: 60, tempType: 'hot' }
+    ];
+
+    const TEA_BASES = ['錫蘭', '三薰', '輕烏'];
+    const COLD_ICE_OPTIONS = ['正常冰', '五分冰', '三分冰', '一分冰', '去冰'];
+    const SUGAR_OPTIONS = ['七分糖', '五分糖', '三分糖', '一分糖', '無糖'];
+    const TOPPINGS = [
+      { id: 't_boba', name: '波霸', price: 5 },
+      { id: 't_coconut', name: '玉荷椰果', price: 5 },
+      { id: 't_jasmine', name: '茉綠凍', price: 10 },
+      { id: 't_grassjelly', name: '仙草300條', price: 15 },
+      { id: 't_pudding', name: '統一布丁', price: 15 }
+    ];
+
+    // Sample initial orders so the user can immediately experience the group-order cart
+    const SAMPLE_ORDERS = [
+      {
+        uid: 'sample-1',
+        orderer: '行銷部 小美',
+        drinkId: 'c4',
+        drinkName: '芭樂梅梅',
+        basePrice: 70,
+        teaBase: null,
+        ice: '三分冰',
+        sugar: '三分糖',
+        toppings: [],
+        note: '',
+        qty: 1,
+        unitPrice: 70
+      },
+      {
+        uid: 'sample-2',
+        orderer: '工程師 Alex',
+        drinkId: 'l1',
+        drinkName: '鮮奶茶',
+        basePrice: 65,
+        teaBase: '輕烏',
+        ice: '去冰',
+        sugar: '一分糖',
+        toppings: [{ id: 't_boba', name: '波霸', price: 5 }],
+        note: '',
+        qty: 1,
+        unitPrice: 70
+      }
+    ];
+
+    // ==========================================
+    // 2. APPLICATION STATE
+    // ==========================================
+    let state = {
+      selectedCategory: 'all',
+      tempFilter: 'all',
+      searchQuery: '',
+      cartViewMode: 'person', // 'person' | 'item'
+      orders: [],
+      lastOrdererName: '',
+      // Modal active selection state
+      modal: {
+        drink: null,
+        teaBase: '錫蘭',
+        ice: '三分冰',
+        sugar: '三分糖',
+        toppings: [],
+        qty: 1
+      }
+    };
+
+    // Load from localStorage if available, otherwise load sample orders
+    function initState() {
+      try {
+        const savedOrders = localStorage.getItem('chahi_group_orders_v1');
+        const savedName = localStorage.getItem('chahi_last_orderer_v1');
+        if (savedOrders !== null) {
+          state.orders = JSON.parse(savedOrders);
+        } else {
+          state.orders = [...SAMPLE_ORDERS];
+          saveOrders();
+        }
+        if (savedName) {
+          state.lastOrdererName = savedName;
+        }
+      } catch (e) {
+        state.orders = [...SAMPLE_ORDERS];
+      }
+    }
+
+    function saveOrders() {
+      try {
+        localStorage.setItem('chahi_group_orders_v1', JSON.stringify(state.orders));
+      } catch (e) {}
+    }
+
+    // ==========================================
+    // 3. UI RENDERING: TABS & MENU
+    // ==========================================
+    function renderCategoryTabs() {
+      const container = document.getElementById('categoryTabs');
+      container.innerHTML = MENU_CATEGORIES.map(cat => {
+        const isActive = state.selectedCategory === cat.id;
+        return `
+          <button 
+            onclick="setCategory('${cat.id}')"
+            class="px-3.5 py-2 rounded-xl text-xs sm:text-sm font-semibold whitespace-nowrap transition ${
+              isActive 
+                ? 'bg-brand-green text-white shadow-xs' 
+                : 'bg-brand-bg text-brand-muted hover:text-brand-text hover:bg-brand-goldLight'
+            }">
+            ${cat.name}
+          </button>
+        `;
+      }).join('');
+    }
+
+    function getTempBadgeHTML(tempType) {
+      if (tempType === 'cold') {
+        return `<span class="inline-flex items-center gap-1 text-[11px] font-medium text-[#2B6CB0] bg-[#EBF8FF] px-2 py-0.5 rounded-full shrink-0" title="僅供冷飲">
+          <span class="w-2 h-2 rounded-full bg-[#3182CE]"></span>僅冷飲
+        </span>`;
+      }
+      if (tempType === 'hot') {
+        return `<span class="inline-flex items-center gap-1 text-[11px] font-medium text-[#C53030] bg-[#FFF5F5] px-2 py-0.5 rounded-full shrink-0" title="僅供熱飲">
+          <span class="w-2 h-2 rounded-full bg-[#E53E3E]"></span>僅熱飲
+        </span>`;
+      }
+      return '';
+    }
+
+    function renderMenu() {
+      const container = document.getElementById('menuContainer');
+      const emptyState = document.getElementById('emptySearchState');
+      const query = state.searchQuery.trim().toLowerCase();
+
+      // Filter items
+      const filteredItems = MENU_ITEMS.filter(item => {
+        const matchCat = state.selectedCategory === 'all' || item.category === state.selectedCategory;
+        const matchQuery = !query || 
+          item.name.toLowerCase().includes(query) || 
+          (item.subtitle && item.subtitle.toLowerCase().includes(query)) ||
+          (item.note && item.note.toLowerCase().includes(query));
+        
+        let matchTemp = true;
+        if (state.tempFilter === 'cold') {
+          matchTemp = item.tempType === 'cold' || item.tempType === 'both';
+        } else if (state.tempFilter === 'hot') {
+          matchTemp = item.tempType === 'hot' || item.tempType === 'both';
+        }
+        return matchCat && matchQuery && matchTemp;
+      });
+
+      if (filteredItems.length === 0) {
+        container.innerHTML = '';
+        emptyState.classList.remove('hidden');
+        return;
+      }
+      emptyState.classList.add('hidden');
+
+      // Group filtered items by category in original order
+      const categoriesToRender = MENU_CATEGORIES.filter(c => c.id !== 'all');
+      let html = '';
+
+      categoriesToRender.forEach(cat => {
+        const catItems = filteredItems.filter(i => i.category === cat.id);
+        if (catItems.length === 0) return;
+
+        html += `
+          <div class="space-y-3">
+            <div class="flex items-center justify-between border-b-2 border-brand-gold/60 pb-2">
+              <div class="flex items-center gap-2.5">
+                <span class="w-2 h-5 rounded-full bg-brand-green"></span>
+                <h2 class="text-lg sm:text-xl font-bold text-brand-text tracking-wide">${cat.name}</h2>
+              </div>
+              <span class="text-xs text-brand-muted font-medium">${catItems.length} 款飲品</span>
+            </div>
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+              ${catItems.map(item => `
+                <div 
+                  onclick="openDrinkModal('${item.id}')"
+                  class="group bg-white hover:bg-brand-greenLight/30 rounded-2xl p-4 border border-brand-gold/50 hover:border-brand-green shadow-2xs hover:shadow-md transition-all cursor-pointer flex flex-col justify-between relative overflow-hidden"
+                >
+                  <div>
+                    <div class="flex items-start justify-between gap-2">
+                      <div class="flex items-center gap-2 flex-wrap">
+                        <h3 class="font-bold text-base text-brand-text group-hover:text-brand-green transition">${item.name}</h3>
+                        ${getTempBadgeHTML(item.tempType)}
+                      </div>
+                      <span class="font-bold text-lg text-brand-plum shrink-0">$${item.price}</span>
+                    </div>
+
+                    ${item.subtitle ? `<p class="text-xs text-brand-muted mt-1">${item.subtitle}</p>` : ''}
+                    
+                    <div class="flex items-center gap-1.5 mt-2 flex-wrap">
+                      ${item.tag ? `<span class="text-[11px] font-semibold px-2 py-0.5 rounded-md bg-brand-plumLight text-brand-plum">${item.tag}</span>` : ''}
+                      ${item.note ? `<span class="text-[11px] font-semibold px-2 py-0.5 rounded-md bg-amber-50 text-amber-800 border border-amber-200">${item.note}</span>` : ''}
+                    </div>
+                  </div>
+
+                  <div class="mt-3 pt-2.5 border-t border-brand-gold/25 flex items-center justify-between">
+                    <span class="text-xs text-brand-muted">點擊選擇冰塊甜度</span>
+                    <span class="inline-flex items-center gap-1 text-xs font-bold text-brand-green bg-brand-greenLight group-hover:bg-brand-green group-hover:text-white px-2.5 py-1 rounded-lg transition">
+                      <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M12 4v16m8-8H4"/></svg>
+                      點餐
+                    </span>
+                  </div>
+                </div>
+              `).join('')}
+            </div>
+          </div>
+        `;
+      });
+
+      container.innerHTML = html;
+    }
+
+    // ==========================================
+    // 4. CUSTOMIZATION MODAL LOGIC
+    // ==========================================
+    function openDrinkModal(drinkId) {
+      const drink = MENU_ITEMS.find(d => d.id === drinkId);
+      if (!drink) return;
+
+      // Initialize modal state defaults
+      state.modal.drink = drink;
+      state.modal.teaBase = drink.requireTeaBase ? TEA_BASES[0] : null;
+      state.modal.ice = drink.tempType === 'hot' ? '熱飲' : '三分冰';
+      state.modal.sugar = '三分糖';
+      state.modal.toppings = [];
+      state.modal.qty = 1;
+
+      // Populate Header
+      const catObj = MENU_CATEGORIES.find(c => c.id === drink.category);
+      document.getElementById('modalCategoryBadge').textContent = catObj ? catObj.name : '';
+      document.getElementById('modalTempBadge').innerHTML = getTempBadgeHTML(drink.tempType);
+      document.getElementById('modalDrinkName').textContent = drink.name;
+      
+      const noteEl = document.getElementById('modalDrinkNote');
+      if (drink.note) {
+        noteEl.textContent = `※ 特別說明：${drink.note}`;
+        noteEl.classList.remove('hidden');
+      } else {
+        noteEl.classList.add('hidden');
+      }
+
+      // Pre-fill orderer name
+      const nameInput = document.getElementById('ordererNameInput');
+      nameInput.value = state.lastOrdererName || '';
+      document.getElementById('itemNoteInput').value = '';
+      document.getElementById('qtyDisplay').textContent = '1';
+
+      renderRecentNameChips();
+      renderModalOptions();
+      updateModalPrice();
+
+      const modal = document.getElementById('customModal');
+      modal.classList.remove('hidden');
+      modal.classList.add('flex');
+    }
+
+    function closeDrinkModal() {
+      const modal = document.getElementById('customModal');
+      modal.classList.add('hidden');
+      modal.classList.remove('flex');
+    }
+
+    function renderRecentNameChips() {
+      const container = document.getElementById('recentNamesContainer');
+      const uniqueNames = [...new Set(state.orders.map(o => o.orderer))];
+      if (uniqueNames.length === 0) {
+        container.innerHTML = '';
+        return;
+      }
+      container.innerHTML = `
+        <span class="text-[11px] text-brand-muted self-center mr-1">快速帶入：</span>
+        ${uniqueNames.slice(0, 5).map(name => `
+          <button type="button" onclick="fillOrdererName('${name.replace(/'/g, "\\'")}')" class="text-xs px-2.5 py-1 rounded-lg bg-brand-goldLight hover:bg-brand-gold/40 text-brand-text transition">
+            ${name}
+          </button>
+        `).join('')}
+      `;
+    }
+
+    function fillOrdererName(name) {
+      document.getElementById('ordererNameInput').value = name;
+    }
+
+    function renderModalOptions() {
+      const drink = state.modal.drink;
+      if (!drink) return;
+
+      // 1. Tea Base
+      const teaSection = document.getElementById('teaBaseSection');
+      const teaContainer = document.getElementById('teaBaseOptions');
+      if (drink.requireTeaBase) {
+        teaSection.classList.remove('hidden');
+        teaContainer.innerHTML = TEA_BASES.map(base => {
+          const active = state.modal.teaBase === base;
+          return `
+            <button type="button" onclick="selectTeaBase('${base}')" class="py-2.5 px-3 rounded-xl text-sm font-semibold border transition ${
+              active ? 'bg-brand-green text-white border-brand-green shadow-xs' : 'bg-brand-bg text-brand-text border-brand-gold/60 hover:border-brand-green'
+            }">${base}</button>
+          `;
+        }).join('');
+      } else {
+        teaSection.classList.add('hidden');
+      }
+
+      // 2. Ice / Temp Options
+      const iceContainer = document.getElementById('iceOptions');
+      const hintEl = document.getElementById('tempRestrictionHint');
+      let availableTemps = [];
+
+      if (drink.tempType === 'cold') {
+        availableTemps = [...COLD_ICE_OPTIONS];
+        hintEl.textContent = '此飲品僅供冷飲';
+      } else if (drink.tempType === 'hot') {
+        availableTemps = ['熱飲'];
+        hintEl.textContent = '此飲品僅供熱飲';
+      } else {
+        availableTemps = [...COLD_ICE_OPTIONS, '熱飲'];
+        hintEl.textContent = '冷熱皆可選擇';
+      }
+
+      iceContainer.innerHTML = availableTemps.map(temp => {
+        const active = state.modal.ice === temp;
+        const isNoIceExtra = drink.noIceExtra && temp === '去冰';
+        const isHot = temp === '熱飲';
+        
+        let activeClass = 'bg-brand-green text-white border-brand-green shadow-xs';
+        if (active && isHot) {
+          activeClass = 'bg-brand-plum text-white border-brand-plum shadow-xs';
+        }
+
+        return `
+          <button type="button" onclick="selectIce('${temp}')" class="py-2.5 px-2 rounded-xl text-xs sm:text-sm font-semibold border transition flex items-center justify-center gap-1 ${
+            active ? activeClass : 'bg-brand-bg text-brand-text border-brand-gold/60 hover:border-brand-green'
+          }">
+            <span>${temp}</span>
+            ${isNoIceExtra ? `<span class="text-[11px] px-1.5 py-0.2 rounded bg-amber-400 text-brand-text font-bold">+$${drink.noIceExtra}</span>` : ''}
+          </button>
+        `;
+      }).join('');
+
+      // 3. Sugar Options
+      const sugarContainer = document.getElementById('sugarOptions');
+      sugarContainer.innerHTML = SUGAR_OPTIONS.map(sugar => {
+        const active = state.modal.sugar === sugar;
+        return `
+          <button type="button" onclick="selectSugar('${sugar}')" class="py-2.5 px-2 rounded-xl text-xs sm:text-sm font-semibold border transition ${
+            active ? 'bg-brand-green text-white border-brand-green shadow-xs' : 'bg-brand-bg text-brand-text border-brand-gold/60 hover:border-brand-green'
+          }">${sugar}</button>
+        `;
+      }).join('');
+
+      // 4. Toppings Options
+      const toppingContainer = document.getElementById('toppingOptions');
+      toppingContainer.innerHTML = TOPPINGS.map(t => {
+        const isSelected = state.modal.toppings.some(item => item.id === t.id);
+        return `
+          <button type="button" onclick="toggleTopping('${t.id}')" class="py-2.5 px-3.5 rounded-xl text-xs sm:text-sm font-medium border transition flex items-center justify-between ${
+            isSelected 
+              ? 'bg-brand-greenLight border-brand-green text-brand-greenDark font-bold' 
+              : 'bg-brand-bg border-brand-gold/60 text-brand-text hover:border-brand-green'
+          }">
+            <span class="flex items-center gap-2">
+              <span class="w-4 h-4 rounded flex items-center justify-center border ${isSelected ? 'bg-brand-green border-brand-green text-white' : 'border-brand-gold bg-white'}">
+                ${isSelected ? '<svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"/></svg>' : ''}
+              </span>
+              <span>${t.name}</span>
+            </span>
+            <span class="text-brand-plum font-semibold">+$${t.price}</span>
+          </button>
+        `;
+      }).join('');
+    }
+
+    function selectTeaBase(base) {
+      state.modal.teaBase = base;
+      renderModalOptions();
+    }
+
+    function selectIce(ice) {
+      state.modal.ice = ice;
+      renderModalOptions();
+      updateModalPrice();
+    }
+
+    function selectSugar(sugar) {
+      state.modal.sugar = sugar;
+      renderModalOptions();
+    }
+
+    function toggleTopping(toppingId) {
+      const idx = state.modal.toppings.findIndex(t => t.id === toppingId);
+      if (idx > -1) {
+        state.modal.toppings.splice(idx, 1);
+      } else {
+        const toppingObj = TOPPINGS.find(t => t.id === toppingId);
+        if (toppingObj) state.modal.toppings.push(toppingObj);
+      }
+      renderModalOptions();
+      updateModalPrice();
+    }
+
+    function calculateModalUnitPrice() {
+      const drink = state.modal.drink;
+      if (!drink) return 0;
+      let price = drink.price;
+      // Special rule: 紅豆紫米拿鐵 去冰 +$10
+      if (drink.noIceExtra && state.modal.ice === '去冰') {
+        price += drink.noIceExtra;
+      }
+      // Toppings price
+      const toppingsSum = state.modal.toppings.reduce((sum, t) => sum + t.price, 0);
+      return price + toppingsSum;
+    }
+
+    function updateModalPrice() {
+      const unitPrice = calculateModalUnitPrice();
+      const total = unitPrice * state.modal.qty;
+      document.getElementById('modalTotalPrice').textContent = `$${total}`;
+    }
+
+    function confirmAddToOrder() {
+      const nameInput = document.getElementById('ordererNameInput');
+      const orderer = nameInput.value.trim();
+
+      if (!orderer) {
+        nameInput.focus();
+        nameInput.classList.add('ring-2', 'ring-brand-plum', 'border-brand-plum');
+        showToast('請輸入訂購人姓名或部門！');
+        setTimeout(() => nameInput.classList.remove('ring-2', 'ring-brand-plum', 'border-brand-plum'), 1800);
+        return;
+      }
+
+      const drink = state.modal.drink;
+      if (drink.requireTeaBase && !state.modal.teaBase) {
+        showToast('請選擇茶底！');
+        return;
+      }
+
+      const unitPrice = calculateModalUnitPrice();
+      const newOrder = {
+        uid: 'ord-' + Date.now() + '-' + Math.random().toString(36).substr(2, 5),
+        orderer: orderer,
+        drinkId: drink.id,
+        drinkName: drink.name,
+        basePrice: drink.price,
+        teaBase: state.modal.teaBase,
+        ice: state.modal.ice,
+        sugar: state.modal.sugar,
+        toppings: [...state.modal.toppings],
+        note: document.getElementById('itemNoteInput').value.trim(),
+        qty: state.modal.qty,
+        unitPrice: unitPrice
+      };
+
+      state.orders.push(newOrder);
+      state.lastOrdererName = orderer;
+      try {
+        localStorage.setItem('chahi_last_orderer_v1', orderer);
+      } catch (e) {}
+
+      saveOrders();
+      renderCart();
+      closeDrinkModal();
+      showToast(`已加入 ${orderer} 的「${drink.name}」`);
+    }
+
+    // ==========================================
+    // 5. GROUP CART RENDERING & ACTIONS
+    // ==========================================
+    function formatDrinkDisplayName(order) {
+      return order.teaBase ? `${order.drinkName} (${order.teaBase})` : order.drinkName;
+    }
+
+    function formatOrderSpec(order) {
+      const parts = [order.ice, order.sugar];
+      if (order.toppings && order.toppings.length > 0) {
+        parts.push('加' + order.toppings.map(t => t.name).join('、'));
+      }
+      return parts.join(' / ');
+    }
+
+    function renderCart() {
+      const container = document.getElementById('cartItemsContainer');
+      const totalCups = state.orders.reduce((sum, o) => sum + o.qty, 0);
+      const totalAmount = state.orders.reduce((sum, o) => sum + (o.unitPrice * o.qty), 0);
+
+      // Update summary counters
+      document.getElementById('totalCupsCount').textContent = totalCups;
+      document.getElementById('totalAmountCount').textContent = totalAmount;
+      document.getElementById('mobileBadgeCount').textContent = totalCups;
+      document.getElementById('mobileTotalAmount').textContent = totalAmount;
+
+      if (state.orders.length === 0) {
+        container.innerHTML = `
+          <div class="h-full flex flex-col items-center justify-center text-center py-10 px-4">
+            <div class="w-12 h-12 rounded-2xl bg-brand-goldLight text-brand-muted flex items-center justify-center mb-3">
+              <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"/></svg>
+            </div>
+            <p class="text-sm font-bold text-brand-text">目前團購單還是空的</p>
+            <p class="text-xs text-brand-muted mt-1">點擊左側任一飲品，即可幫自己或同事加入點餐！</p>
+            <button onclick="loadSampleOrders()" class="mt-4 text-xs font-semibold px-3 py-1.5 rounded-lg bg-brand-goldLight text-brand-text hover:bg-brand-gold/40 transition">
+              載入範例訂單
+            </button>
+          </div>
+        `;
+        return;
+      }
+
+      if (state.cartViewMode === 'person') {
+        // View 1: By Person
+        container.innerHTML = state.orders.map(order => {
+          const subtotal = order.unitPrice * order.qty;
+          return `
+            <div class="bg-white rounded-xl p-3.5 border border-brand-gold/50 shadow-2xs space-y-2">
+              <div class="flex items-start justify-between gap-2">
+                <div class="flex items-center gap-1.5 flex-wrap">
+                  <span class="text-xs font-bold px-2 py-0.5 rounded-md bg-brand-greenLight text-brand-greenDark">${escapeHTML(order.orderer)}</span>
+                  <h4 class="font-bold text-sm text-brand-text">${escapeHTML(formatDrinkDisplayName(order))}</h4>
+                </div>
+                <span class="font-bold text-sm text-brand-plum shrink-0">$${subtotal}</span>
+              </div>
+
+              <p class="text-xs text-brand-muted">${escapeHTML(formatOrderSpec(order))}</p>
+              ${order.note ? `<p class="text-[11px] text-amber-800 bg-amber-50 px-2 py-0.5 rounded inline-block">備註：${escapeHTML(order.note)}</p>` : ''}
+
+              <div class="pt-2 border-t border-brand-gold/25 flex items-center justify-between">
+                <!-- Quantity control -->
+                <div class="flex items-center gap-1.5">
+                  <button onclick="updateOrderQty('${order.uid}', -1)" class="w-6 h-6 rounded-md bg-brand-bg hover:bg-brand-goldLight text-brand-text font-bold text-xs flex items-center justify-center transition">-</button>
+                  <span class="text-xs font-bold w-5 text-center">${order.qty}</span>
+                  <button onclick="updateOrderQty('${order.uid}', 1)" class="w-6 h-6 rounded-md bg-brand-bg hover:bg-brand-goldLight text-brand-text font-bold text-xs flex items-center justify-center transition">+</button>
+                  <span class="text-[11px] text-brand-muted ml-1">($${order.unitPrice}/杯)</span>
+                </div>
+
+                <!-- Duplicate & Delete -->
+                <div class="flex items-center gap-1">
+                  <button onclick="duplicateOrder('${order.uid}')" class="text-[11px] px-2 py-1 rounded-md text-brand-green hover:bg-brand-greenLight font-medium transition" title="複製同樣一杯給其他人">
+                    +1同款
+                  </button>
+                  <button onclick="removeOrder('${order.uid}')" class="p-1 rounded-md text-brand-muted hover:text-brand-plum hover:bg-brand-plumLight transition" title="刪除此筆">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg>
+                  </button>
+                </div>
+              </div>
+            </div>
+          `;
+        }).join('');
+      } else {
+        // View 2: Grouped by Drink + Spec (For calling/ordering at store)
+        const groupedMap = new Map();
+        state.orders.forEach(order => {
+          const key = `${formatDrinkDisplayName(order)}|${formatOrderSpec(order)}|${order.note}`;
+          if (!groupedMap.has(key)) {
+            groupedMap.set(key, {
+              title: formatDrinkDisplayName(order),
+              spec: formatOrderSpec(order),
+              note: order.note,
+              unitPrice: order.unitPrice,
+              totalQty: 0,
+              orderers: []
+            });
+          }
+          const group = groupedMap.get(key);
+          group.totalQty += order.qty;
+          group.orderers.push(`${order.orderer}${order.qty > 1 ? `x${order.qty}` : ''}`);
+        });
+
+        container.innerHTML = Array.from(groupedMap.values()).map(g => `
+          <div class="bg-white rounded-xl p-3.5 border border-brand-gold/50 shadow-2xs space-y-1.5">
+            <div class="flex items-start justify-between gap-2">
+              <div class="flex items-center gap-2">
+                <span class="px-2 py-0.5 rounded-lg bg-brand-plum text-white font-bold text-xs">${g.totalQty} 杯</span>
+                <h4 class="font-bold text-sm text-brand-text">${escapeHTML(g.title)}</h4>
+              </div>
+              <span class="font-bold text-sm text-brand-text">$${g.unitPrice * g.totalQty}</span>
+            </div>
+            <p class="text-xs font-medium text-brand-greenDark">${escapeHTML(g.spec)}</p>
+            ${g.note ? `<p class="text-[11px] text-amber-800">備註：${escapeHTML(g.note)}</p>` : ''}
+            <p class="text-[11px] text-brand-muted pt-1 border-t border-brand-gold/25">
+              訂購人：${escapeHTML(g.orderers.join('、'))}
+            </p>
+          </div>
+        `).join('');
+      }
+    }
+
+    function updateOrderQty(uid, delta) {
+      const idx = state.orders.findIndex(o => o.uid === uid);
+      if (idx === -1) return;
+      state.orders[idx].qty += delta;
+      if (state.orders[idx].qty <= 0) {
+        state.orders.splice(idx, 1);
+      }
+      saveOrders();
+      renderCart();
+    }
+
+    function removeOrder(uid) {
+      state.orders = state.orders.filter(o => o.uid !== uid);
+      saveOrders();
+      renderCart();
+      showToast('已移除該筆飲品');
+    }
+
+    function duplicateOrder(uid) {
+      const orig = state.orders.find(o => o.uid === uid);
+      if (!orig) return;
+      const copy = {
+        ...orig,
+        uid: 'ord-' + Date.now() + '-' + Math.random().toString(36).substr(2, 5),
+        qty: 1
+      };
+      state.orders.push(copy);
+      saveOrders();
+      renderCart();
+      showToast(`已複製一杯「${orig.drinkName}」`);
+    }
+
+    function loadSampleOrders() {
+      state.orders = [...SAMPLE_ORDERS];
+      saveOrders();
+      renderCart();
+      showToast('已載入範例團購訂單');
+    }
+
+    // ==========================================
+    // 6. COPY ORDER SUMMARY TO CLIPBOARD
+    // ==========================================
+    function copyOrderSummary() {
+      if (state.orders.length === 0) {
+        showToast('目前沒有訂單可複製喔！');
+        return;
+      }
+
+      const totalCups = state.orders.reduce((sum, o) => sum + o.qty, 0);
+      const totalAmount = state.orders.reduce((sum, o) => sum + (o.unitPrice * o.qty), 0);
+
+      let lines = [];
+      lines.push('【茶海 CHA Hi 辦公室午茶團購單】');
+      lines.push('━━━━━━━━━━━━━━');
+      lines.push('📋 個人明細（方便收款）：');
+      
+      state.orders.forEach((o, i) => {
+        const toppingStr = o.toppings.length > 0 ? ` +${o.toppings.map(t => t.name).join('、')}` : '';
+        const noteStr = o.note ? ` (${o.note})` : '';
+        const qtyStr = o.qty > 1 ? ` x${o.qty}` : '';
+        lines.push(`${i + 1}. [${o.orderer}] ${formatDrinkDisplayName(o)} (${o.ice}/${o.sugar}${toppingStr})${noteStr}${qtyStr} - $${o.unitPrice * o.qty}`);
+      });
+
+      lines.push('━━━━━━━━━━━━━━');
+      lines.push('🏪 店家叫餐統計：');
+
+      const groupedMap = new Map();
+      state.orders.forEach(o => {
+        const key = `${formatDrinkDisplayName(o)}|${formatOrderSpec(o)}|${o.note}`;
+        if (!groupedMap.has(key)) {
+          groupedMap.set(key, {
+            title: formatDrinkDisplayName(o),
+            spec: formatOrderSpec(o),
+            note: o.note,
+            qty: 0
+          });
+        }
+        groupedMap.get(key).qty += o.qty;
+      });
+
+      groupedMap.forEach(g => {
+        const noteStr = g.note ? ` [${g.note}]` : '';
+        lines.push(`• ${g.title} (${g.spec})${noteStr} x ${g.qty}杯`);
+      });
+
+      lines.push('━━━━━━━━━━━━━━');
+      lines.push(`總計：${totalCups} 杯 / 總金額：$${totalAmount}`);
+
+      const textToCopy = lines.join('\n');
+
+      // Use textarea + document.execCommand('copy') for reliable iFrame compatibility
+      const textArea = document.createElement('textarea');
+      textArea.value = textToCopy;
+      textArea.style.position = 'fixed';
+      textArea.style.left = '-9999px';
+      document.body.appendChild(textArea);
+      textArea.select();
+      try {
+        document.execCommand('copy');
+        showToast('已複製團購明細！可直接貼上 LINE / Teams');
+      } catch (err) {
+        showToast('複製失敗，請手動選取複製');
+      }
+      document.body.removeChild(textArea);
+    }
+
+    // ==========================================
+    // 7. HELPERS & EVENT LISTENERS
+    // ==========================================
+    function setCategory(catId) {
+      state.selectedCategory = catId;
+      renderCategoryTabs();
+      renderMenu();
+    }
+
+    function escapeHTML(str) {
+      if (!str) return '';
+      return str.replace(/[&<>"']/g, m => ({
+        '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'
+      }[m]));
+    }
+
+    let toastTimer = null;
+    function showToast(msg) {
+      const toast = document.getElementById('toast');
+      document.getElementById('toastMessage').textContent = msg;
+      toast.classList.remove('opacity-0', '-translate-y-2');
+      toast.classList.add('opacity-100', 'translate-y-0');
+
+      if (toastTimer) clearTimeout(toastTimer);
+      toastTimer = setTimeout(() => {
+        toast.classList.add('opacity-0', '-translate-y-2');
+        toast.classList.remove('opacity-100', 'translate-y-0');
+      }, 2500);
+    }
+
+    window.onload = function () {
+      initState();
+      renderCategoryTabs();
+      renderMenu();
+      renderCart();
+
+      // Search input events
+      const searchInput = document.getElementById('searchInput');
+      const clearSearchBtn = document.getElementById('clearSearchBtn');
+      searchInput.addEventListener('input', (e) => {
+        state.searchQuery = e.target.value;
+        clearSearchBtn.classList.toggle('hidden', !state.searchQuery);
+        renderMenu();
+      });
+
+      clearSearchBtn.addEventListener('click', () => {
+        searchInput.value = '';
+        state.searchQuery = '';
+        clearSearchBtn.classList.add('hidden');
+        renderMenu();
+      });
+
+      document.getElementById('resetFiltersBtn').addEventListener('click', () => {
+        searchInput.value = '';
+        state.searchQuery = '';
+        state.selectedCategory = 'all';
+        state.tempFilter = 'all';
+        clearSearchBtn.classList.add('hidden');
+        document.querySelectorAll('.temp-filter-btn').forEach(btn => {
+          btn.classList.remove('bg-brand-green', 'text-white', 'shadow-sm');
+          btn.classList.add('text-brand-muted');
+          if (btn.dataset.tempFilter === 'all') {
+            btn.classList.add('bg-brand-green', 'text-white', 'shadow-sm');
+            btn.classList.remove('text-brand-muted');
+          }
+        });
+        renderCategoryTabs();
+        renderMenu();
+      });
+
+      // Temp filter buttons
+      document.querySelectorAll('.temp-filter-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+          state.tempFilter = btn.dataset.tempFilter;
+          document.querySelectorAll('.temp-filter-btn').forEach(b => {
+            b.classList.remove('bg-brand-green', 'text-white', 'shadow-sm');
+            b.classList.add('text-brand-muted');
+          });
+          btn.classList.add('bg-brand-green', 'text-white', 'shadow-sm');
+          btn.classList.remove('text-brand-muted');
+          renderMenu();
+        });
+      });
+
+      // Modal controls
+      document.getElementById('closeModalBtn').addEventListener('click', closeDrinkModal);
+      document.getElementById('modalBackdrop').addEventListener('click', closeDrinkModal);
+      document.getElementById('confirmAddBtn').addEventListener('click', confirmAddToOrder);
+
+      document.getElementById('qtyMinusBtn').addEventListener('click', () => {
+        if (state.modal.qty > 1) {
+          state.modal.qty--;
+          document.getElementById('qtyDisplay').textContent = state.modal.qty;
+          updateModalPrice();
+        }
+      });
+
+      document.getElementById('qtyPlusBtn').addEventListener('click', () => {
+        if (state.modal.qty < 30) {
+          state.modal.qty++;
+          document.getElementById('qtyDisplay').textContent = state.modal.qty;
+          updateModalPrice();
+        }
+      });
+
+      // Cart View Toggles
+      const viewByPersonBtn = document.getElementById('viewByPersonBtn');
+      const viewByItemBtn = document.getElementById('viewByItemBtn');
+
+      viewByPersonBtn.addEventListener('click', () => {
+        state.cartViewMode = 'person';
+        viewByPersonBtn.classList.add('bg-brand-green', 'text-white', 'shadow-xs');
+        viewByPersonBtn.classList.remove('text-brand-muted');
+        viewByItemBtn.classList.remove('bg-brand-green', 'text-white', 'shadow-xs');
+        viewByItemBtn.classList.add('text-brand-muted');
+        renderCart();
+      });
+
+      viewByItemBtn.addEventListener('click', () => {
+        state.cartViewMode = 'item';
+        viewByItemBtn.classList.add('bg-brand-green', 'text-white', 'shadow-xs');
+        viewByItemBtn.classList.remove('text-brand-muted');
+        viewByPersonBtn.classList.remove('bg-brand-green', 'text-white', 'shadow-xs');
+        viewByPersonBtn.classList.add('text-brand-muted');
+        renderCart();
+      });
+
+      // Copy Summary & Clear Cart
+      document.getElementById('copySummaryBtn').addEventListener('click', copyOrderSummary);
+
+      const confirmDialog = document.getElementById('confirmDialog');
+      document.getElementById('clearCartBtn').addEventListener('click', () => {
+        if (state.orders.length === 0) return;
+        confirmDialog.classList.remove('hidden');
+        confirmDialog.classList.add('flex');
+      });
+
+      document.getElementById('cancelClearBtn').addEventListener('click', () => {
+        confirmDialog.classList.add('hidden');
+        confirmDialog.classList.remove('flex');
+      });
+
+      document.getElementById('executeClearBtn').addEventListener('click', () => {
+        state.orders = [];
+        saveOrders();
+        renderCart();
+        confirmDialog.classList.add('hidden');
+        confirmDialog.classList.remove('flex');
+        showToast('已清空所有團購訂單');
+      });
+
+      // Mobile Cart Drawer Controls
+      const cartSidebar = document.getElementById('cartSidebar');
+      document.getElementById('openMobileCartBtn').addEventListener('click', () => {
+        cartSidebar.classList.remove('hidden');
+      });
+      document.getElementById('closeMobileCartBtn').addEventListener('click', () => {
+        cartSidebar.classList.add('hidden');
+      });
+      document.getElementById('cartBackdrop').addEventListener('click', () => {
+        cartSidebar.classList.add('hidden');
+      });
+    };
+  </script>
+</body>
+</html>
